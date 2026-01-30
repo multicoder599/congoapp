@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Succès | CongoCash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .success-circle {
+            width: 100px;
+            height: 100px;
+            background: #E31937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(227, 25, 55, 0.3);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #E31937;
+            border-radius: 50%;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="p-8 text-center">
+
+    <div class="animate__animated animate__bounceIn mb-8">
+        <div class="success-circle mx-auto">
+            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+    </div>
+
+    <div class="animate__animated animate__fadeInUp">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Transfert Réussi !</h1>
+        <p class="text-gray-500 mb-8">Votre argent a été envoyé avec succès sur votre compte Airtel Money.</p>
+        
+        <div class="bg-gray-50 rounded-3xl p-6 mb-8 border border-gray-100 text-left">
+            <div class="flex justify-between mb-4">
+                <span class="text-gray-400 text-sm">Montant</span>
+                <span class="font-bold text-gray-900">150.000 CDF</span>
+            </div>
+            <div class="flex justify-between mb-4">
+                <span class="text-gray-400 text-sm">ID Transaction</span>
+                <span class="font-mono text-sm text-gray-900">TXN-98443210</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-400 text-sm">Destinataire</span>
+                <span class="font-bold text-gray-900">+243 99X XXX XXX</span>
+            </div>
+        </div>
+
+        <div class="mb-10">
+            <p class="text-xs text-red-600 font-bold uppercase tracking-widest mb-3">Score de Crédit Amélioré</p>
+            <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-red-600 h-full w-2/3"></div>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-2">Payez à temps pour débloquer la limite de 750.000 CDF</p>
+        </div>
+
+        <button onclick="window.location.href='index.html'" class="w-full bg-gray-900 text-white font-bold py-4 rounded-xl shadow-lg transition-transform active:scale-95">
+            Retour à l'accueil
+        </button>
+    </div>
+
+    <script>
+        // Simple confetti effect logic
+        for (let i = 0; i < 20; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            document.body.appendChild(confetti);
+            
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            
+            confetti.style.left = x + 'px';
+            confetti.style.top = (y - 50) + 'px';
+            confetti.style.backgroundColor = i % 2 === 0 ? '#E31937' : '#00adef';
+            
+            confetti.animate([
+                { transform: 'translateY(0) scale(1)', opacity: 1 },
+                { transform: `translateY(${Math.random() * 200 + 100}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 2000 + 1000,
+                iterations: Infinity,
+                delay: Math.random() * 1000
+            });
+        }
+    </script>
+</body>
+</html>

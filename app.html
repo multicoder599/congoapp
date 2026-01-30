@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airtel | A Reason to Imagine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #E31937; /* Airtel Official Red */
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+        }
+
+        /* Dot Pattern Overlays */
+        .dots {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background-image: radial-gradient(rgba(255,255,255,0.3) 15%, transparent 15%);
+            background-size: 15px 15px;
+        }
+        .dots-top { top: 40px; left: 20px; }
+        .dots-bottom { bottom: 40px; right: 20px; }
+
+        .logo-container {
+            text-align: center;
+            color: white;
+            z-index: 10;
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            margin: 40px auto 0;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dots dots-top"></div>
+    <div class="dots dots-bottom"></div>
+
+    <div class="logo-container animate__animated animate__fadeIn">
+        <svg class="w-48 mx-auto mb-4" viewBox="0 0 300 100" fill="white">
+            <path d="M45.2,74.5c-11.2,0-20.3-9.1-20.3-20.3s9.1-20.3,20.3-20.3s20.3,9.1,20.3,20.3S56.4,74.5,45.2,74.5z M45.2,38.9 c-8.5,0-15.4,6.9-15.4,15.4s6.9,15.4,15.4,15.4s15.4-6.9,15.4-15.4S53.7,38.9,45.2,38.9z"/>
+            <text x="80" y="65" font-family="Arial, sans-serif" font-weight="bold" font-size="55">airtel</text>
+        </svg>
+        
+        <p class="uppercase tracking-[0.2em] text-sm font-light">A Reason to Imagine</p>
+        
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        // Redirect to start.html after 3 seconds
+        window.onload = () => {
+            setTimeout(() => {
+                document.body.classList.add('fade-out');
+                setTimeout(() => {
+                    window.location.href = 'start.html';
+                }, 500);
+            }, 3000);
+        };
+    </script>
+</body>
+</html>

