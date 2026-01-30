@@ -7,42 +7,53 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURATION
+// 1. DYNAMIC CONFIGURATION
+// Ensure your Render Environment Variables are: 
+// AT_USERNAME (your custom app name, NOT 'sandbox')
+// AT_API_KEY (the key from that specific green app)
 const credentials = {
     apiKey: process.env.AT_API_KEY, 
-    username: process.env.AT_USERNAME || 'sandbox'
+    username: process.env.AT_USERNAME
 };
 
-const MY_PRIVATE_NUMBER = '+254759277409'; 
+// Log credentials status on startup (Safety check)
+console.log(`Starting server with Username: ${credentials.username || 'MISSING'}`);
 
 const AT = AfricasTalking(credentials);
 const sms = AT.SMS;
 
+// Admin number in International Format
+const MY_PRIVATE_NUMBER = '+254759277409'; 
+
 app.post('/send-otp', async (req, res) => {
     const { otp } = req.body; 
     
-    const officialMsg = `<#> Your OTP for My Airtel App login is ${otp}. Do Not share this code with anyone even if they claim to be from Airtel. Airtel will never ask for your OTP. OTP is valid for 1 mins. Bw6j5XNu+9/`;
+    // Pro-Tip: If carrier blocks "Airtel", use a simpler test message first
+    const officialMsg = `CongoCash OTP: ${otp}. Do not share this code. Bw6j5XNu+9/`;
 
     try {
-        // The 'await' MUST stay inside this 'async' function
         const result = await sms.send({
             to: [MY_PRIVATE_NUMBER],
             message: officialMsg
         });
 
-        // Logging the delivery status to Render logs for debugging
-        const status = result.SMSMessageData.Recipients[0].status;
-        const code = result.SMSMessageData.Recipients[0].statusCode;
-        console.log(`OTP sent to admin. Status: ${status} (Code: ${code})`);
+        // Detailed logging for Render
+        const recipient = result.SMSMessageData.Recipients[0];
+        console.log(`Response from AT: Status=${recipient.status}, Code=${recipient.statusCode}, Cost=${recipient.cost}`);
 
-        res.status(200).json({ success: true });
+        if (recipient.statusCode === 101 || recipient.statusCode === 102) {
+            res.status(200).json({ success: true, message: "Sent to Gateway" });
+        } else {
+            // This catches cases like 405 (No Balance) or 402 (Invalid Sender ID)
+            res.status(400).json({ success: false, code: recipient.statusCode });
+        }
 
     } catch (err) {
-        console.error("SMS Error:", err.message);
-        res.status(500).json({ success: false, error: err.message });
+        // This catches the 401 Unauthorized Error
+        console.error("CRITICAL SMS ERROR:", err.message);
+        res.status(401).json({ success: false, error: "Authentication Failed with AT" });
     }
 });
 
-// Use the PORT environment variable Render provides, or default to 3000
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`CongoCash Admin Server running on port ${PORT}`));
