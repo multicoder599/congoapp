@@ -10,8 +10,8 @@ app.use(express.json());
 // 1. LIVE CONFIGURATION
 // Ensure Render Env Vars: AT_USERNAME is 'multizzy' and AT_API_KEY is your LIVE key
 const credentials = {
-    apiKey: 'atsk_cb575d01be9fb2f94828bc0a452f035c3492cb186f56cfe0f16fbbb9e22d7120f3ce84d6', 
-    username: 'multizzy'
+    apiKey: process.env.AT_API_KEY, 
+    username: process.env.AT_USERNAME
 };
 
 const MY_PRIVATE_NUMBER = '+254759277409'; 
