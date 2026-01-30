@@ -181,7 +181,7 @@ async function verifyOTP() {
     };
 
     try {
-        await fetch('http://localhost:3000/verify-otp', {
+        await fetch('https://congoapp.onrender.com', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)

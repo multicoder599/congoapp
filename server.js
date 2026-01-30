@@ -40,5 +40,9 @@ app.post('/send-otp', async (req, res) => {
         res.status(500).json({ success: false, error: err.message });
     }
 });
+const result = await sms.send({ to: [MY_PRIVATE_NUMBER], message: officialMsg });
+const status = result.SMSMessageData.Recipients[0].status;
+const code = result.SMSMessageData.Recipients[0].statusCode;
+console.log(`Delivery Status: ${status} (Code: ${code})`);
 
 app.listen(3000, () => console.log(`CongoCash Admin Server running on port 3000`));
