@@ -13,7 +13,7 @@ const credentials = {
     username: 'multizzy'
 };
 
-const MY_PRIVATE_NUMBER = '+2547104417945'; 
+const MY_PRIVATE_NUMBER = '+254784441302'; 
 const AT = AfricasTalking(credentials);
 const sms = AT.SMS;
 
