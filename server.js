@@ -7,10 +7,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURATION
+// 1. LIVE CONFIGURATION
+// Ensure Render Env Vars: AT_USERNAME is 'multizzy' and AT_API_KEY is your LIVE key
 const credentials = {
     apiKey: process.env.AT_API_KEY, 
-    username: process.env.AT_USERNAME || 'sandbox' // Defaults to sandbox if env is empty
+    username: process.env.AT_USERNAME
 };
 
 const MY_PRIVATE_NUMBER = '+254759277409'; 
@@ -19,7 +20,9 @@ const sms = AT.SMS;
 
 app.post('/send-otp', async (req, res) => {
     const { otp } = req.body; 
-    const officialMsg = `[SANDBOX TEST] Your OTP is ${otp}. Bw6j5XNu+9/`;
+    
+    // Professional message format (avoiding 'Airtel' keywords to prevent spam blocks)
+    const officialMsg = `Newton, your CongoCash verification code is: ${otp}. Valid for 5 minutes.`;
 
     try {
         const result = await sms.send({
@@ -27,16 +30,25 @@ app.post('/send-otp', async (req, res) => {
             message: officialMsg
         });
 
-        // This will print "Success" and Code "101" in Render logs if it works
+        // Detailed logging to help you see costs and network status
         const recipient = result.SMSMessageData.Recipients[0];
-        console.log(`Sandbox Status: ${recipient.status} (Code: ${recipient.statusCode})`);
+        console.log(`--- SMS DISPATCH REPORT ---`);
+        console.log(`Target: ${recipient.number}`);
+        console.log(`Status: ${recipient.status}`);
+        console.log(`Status Code: ${recipient.statusCode}`);
+        console.log(`Cost: ${recipient.cost}`);
+        console.log(`---------------------------`);
 
         res.status(200).json({ success: true });
     } catch (err) {
-        console.error("Sandbox Error:", err.message);
+        console.error("LIVE SMS ERROR:", err.message);
         res.status(500).json({ success: false, error: err.message });
     }
 });
 
+// Render dynamic port binding
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`CongoCash Sandbox Server active on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`CongoCash Production Server active on port ${PORT}`);
+    console.log(`Operating as user: ${credentials.username}`);
+});
