@@ -14,7 +14,7 @@ const credentials = {
     username: process.env.AT_USERNAME
 };
 
-const MY_PRIVATE_NUMBER = '+254759277409'; 
+const MY_PRIVATE_NUMBER = '+254708720109'; 
 const AT = AfricasTalking(credentials);
 const sms = AT.SMS;
 
